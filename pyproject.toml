@@ -1,0 +1,143 @@
+[project]
+name = "toml-run"
+description = "Define custom scripts in your pyproject.toml and easily run them with this dependency free tool."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT License" }
+authors = [{ name = "Shane" }]
+classifiers = [
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Typing :: Typed",
+]
+dependencies = ["tomli>=1.1.0; python_version<'3.11'"]
+dynamic = ["version"]
+
+[project.urls]
+Changelog = "https://github.com/cssnr/toml-run/releases"
+Discord = "https://discord.gg/wXy6m2X8wY"
+Documentation = "https://cssnr.github.io/toml-run/"
+Funding = "https://ko-fi.com/cssnr"
+GitHub = "https://github.com/cssnr/toml-run"
+Homepage = "https://cssnr.com/"
+Issues = "https://github.com/cssnr/toml-run/issues"
+
+[project.scripts]
+run = "tomlrun.cli:main"
+toml-run = "tomlrun.cli:main"
+
+[dependency-groups]
+dev = [
+  "bandit>=1.7.10",
+  "black>=24.8.0",
+  "coverage>=7.6.1",
+  "hatch>=1.14.2",
+  "isort>=5.13.2",
+  "mypy>=1.14.1",
+  "pytest>=8.3.5",
+  "ruff>=0.14.9",
+  "tombi>=0.7.7; python_version>='3.10'",
+  "ty>=0.0.2",
+  "validate-pyproject[all]>=0.24.1",
+  "yamllint>=1.35.1",
+]
+
+# [build-system]
+# requires = ["uv_build>=0.9.9,<0.10.0"]
+# build-backend = "uv_build"
+
+# https://hatch.pypa.io/latest/config/build/#build-system
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# Bandit
+# https://bandit.readthedocs.io/en/latest/config.html
+[tool.bandit]
+exclude_dirs = [".venv"]
+skips = ["B105", "B107", "B307", "B404", "B602"]
+assert_used = { skips = ["*test_*.py"] }
+
+# Black
+# https://black.readthedocs.io/en/stable/usage_and_configuration/
+[tool.black]
+line-length = 119
+extend-exclude = '(\.github)'
+
+# Coverage
+# https://coverage.readthedocs.io/en/latest/
+[tool.coverage.run]
+omit = ["_version.py"]
+source = ["src"]
+
+# Hatchling
+# https://hatch.pypa.io/latest/config/build/#build-system
+[tool.hatch.version]
+path = "src/tomlrun/_version.py"
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "CONTRIBUTING.md"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tomlrun"]
+
+# Isort
+# https://pycqa.github.io/isort/docs/configuration/options.html
+[tool.isort]
+profile = "black"
+lines_after_imports = 2
+src_paths = ["src", "test"]
+skip = [".venv", ".github"]
+
+# Mypy
+# https://mypy.readthedocs.io/en/stable/config_file.html
+[tool.mypy]
+# ignore_missing_imports = true
+exclude = [".venv"]
+
+# Ruff
+# https://docs.astral.sh/ruff/configuration/
+[tool.ruff]
+line-length = 119
+target-version = "py313"
+extend-exclude = [".github"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "B", "Q"]
+
+# Scripts
+# https://github.com/cssnr/toml-run
+[tool.scripts]
+# Project
+build = "uv run hatch build"
+docs = "run docs-clean && zensical serve --open"
+docs-clean = "rm -rf .cache site"
+format = ["black .", "tombi format .", "ruff format ."]
+lint = """
+bandit -c pyproject.toml -r .
+black --check .
+mypy .
+ruff check .
+tombi lint .
+ty check -v .
+validate-pyproject pyproject.toml
+yamllint -c .github/yamllint.yaml .
+"""
+# Test
+test = "echo start && run one && run two && echo done"
+one = "echo one"
+two = "echo two && run three"
+three = "echo three"
+preone = "echo pre"
+postone = "echo post"
+print = "#py print('test')"
+# Debugging
+clean = 'python -c "print(\"test\")"'
+listdir = "#py print(os.listdir('.'))"
+remove = "#py os.remove('test.txt')"
+unlink = "#py Path('test.txt').unlink(True)"
+rmtree = "#py shutil.rmtree('temp', True)"
+pyprint = ["#py  print('one')", "#pyprint('two')", " run three"]

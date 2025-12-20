@@ -1,0 +1,135 @@
+name: "Lint"
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths-ignore:
+      - ".gitattributes"
+      - ".gitignore"
+      - "*.ps1"
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: "Lint"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v6
+
+      - name: "Debug event.json"
+        continue-on-error: true
+        run: cat "${GITHUB_EVENT_PATH}"
+
+      - name: "Debug CTX github"
+        continue-on-error: true
+        env:
+          GITHUB_CTX: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CTX"
+
+      - name: "Debug Environment"
+        continue-on-error: true
+        run: env
+
+      - name: "Install UV"
+        uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
+
+      - name: "Install Python"
+        run: |
+          uv python install
+
+      - name: "Install Project"
+        run: |
+          uv sync --locked --all-extras --dev
+
+      - name: "Debug UV"
+        continue-on-error: true
+        run: |
+          uv python dir
+          uv python find
+          uv run python -V
+          echo "::group::uv tree"
+          uv tree
+          echo "::endgroup::"
+          echo "::group::uv pip list"
+          uv pip list
+          echo "::endgroup::"
+
+      - name: "astral-sh/ty"
+        if: ${{ !cancelled() }}
+        run: |
+          uv run ty check -v
+
+      - name: "psf/black"
+        if: ${{ !cancelled() }}
+        uses: psf/black@stable
+
+      - name: "isort"
+        if: ${{ !cancelled() }}
+        uses: isort/isort-action@24d8a7a51d33ca7f36c3f23598dafa33f7071326 # v1.1.1
+
+      - name: "mypy"
+        if: ${{ !cancelled() }}
+        run: |
+          uv run mypy src
+
+      - name: "bandit"
+        if: ${{ !cancelled() }}
+        run: |
+          uv run bandit -c pyproject.toml -r src
+
+      - name: "validate-pyproject"
+        if: ${{ !cancelled() }}
+        run: |
+          uv run validate-pyproject pyproject.toml
+
+      - name: "tombi"
+        if: ${{ !cancelled() }}
+        run: |
+          uv run tombi lint
+
+      - name: "prettier"
+        if: ${{ !cancelled() }}
+        run: |
+          echo "::group::Install"
+          npm install prettier
+          echo "::endgroup::"
+          npx prettier --check .
+
+      - name: "yamllint"
+        if: ${{ !cancelled() }}
+        run: |
+          echo "::group::List Files"
+          yamllint -c .github/yamllint.yaml --list-files .
+          echo "::endgroup::"
+          yamllint -c .github/yamllint.yaml .
+
+      - name: "actionlint"
+        if: ${{ !cancelled() }}
+        uses: cssnr/actionlint-action@master
+        with:
+          shellcheck_opts: -e SC2012
+
+      - name: "pytest"
+        if: ${{ !cancelled() }}
+        id: coverage
+        run: |
+          uv run coverage run -m pytest
+          uv run coverage xml
+          uv run coverage report -m
+
+      - name: "codecov"
+        if: ${{ !cancelled() && steps.coverage.outcome == 'success' }}
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

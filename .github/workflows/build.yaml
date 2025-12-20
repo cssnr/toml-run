@@ -1,0 +1,95 @@
+name: "Build Package"
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: "Build Version"
+        type: string
+        default: ${{ github.ref_name }}
+      version-file:
+        description: "Version File"
+        type: string
+        default: ""
+      name:
+        description: "Artifact Name"
+        type: string
+        default: "dist"
+      path:
+        description: "Build Path"
+        type: string
+        default: "dist"
+
+jobs:
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v6
+
+      - name: "Debug event.json"
+        continue-on-error: true
+        run: cat "${GITHUB_EVENT_PATH}"
+
+      - name: "Debug CTX github"
+        continue-on-error: true
+        env:
+          GITHUB_CTX: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CTX"
+
+      - name: "Debug Environment"
+        continue-on-error: true
+        run: env
+
+      - name: "Install UV"
+        uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
+
+      - name: "Install Python 3.13"
+        run: |
+          uv python install 3.13
+
+      - name: "Install"
+        run: |
+          uv sync --locked --all-extras --dev
+
+      - name: "Update Version"
+        if: ${{ inputs.version-file }}
+        env:
+          file: ${{ inputs.version-file }}
+          version: ${{ inputs.version }}
+        run: |
+          sed -i "s/0.0.1/${version}/" "${file}"
+          cat "${file}"
+
+      - name: "Build"
+        run: |
+          uv run hatch build
+
+      - name: "List Artifacts"
+        working-directory: ${{ inputs.path }}
+        run: |
+          results="$(tree . || ls -lAhR .)"
+          echo "::group::results"
+          echo "${results}"
+          echo "::endgroup::"
+          md="Artifacts: \`${{ inputs.path }}\`\n\`\`\`text\n${results}\n\`\`\`"
+          echo -e "${md}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: "Upload to Actions"
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ inputs.name }}
+          path: ${{ inputs.path }}
+
+      - name: "Send Failure Notification"
+        if: ${{ failure() }}
+        uses: sarisia/actions-status-discord@b8381b25576cb341b2af39926ab42c5056cc44ed # v1.15.5
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          description: ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}
