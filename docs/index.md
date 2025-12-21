@@ -70,6 +70,7 @@ If you run into any issues or have any questions, [support](support.md) is avail
 - Cross-platform support using subprocess
 - Supports `pre` and `post` scripts
 - Supports multiple commands per script
+- Pass additional arguments to scripts
 - Automatically finds the `pyproject.toml`
 - Runs scripts relative to the root directory
 - Evaluate python code :lucide-flask-conical:{ title="Experimental Feature!" }

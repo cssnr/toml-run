@@ -47,6 +47,7 @@ To get started [Install](#install) the cli and view the [Usage](#usage).
 - Cross-platform support using subprocess
 - Supports `pre` and `post` scripts
 - Supports multiple commands per script
+- Pass additional arguments to scripts
 - Automatically finds the `pyproject.toml`
 - Runs scripts relative to the root directory
 - Evaluate python code 🧪 (experimental)
@@ -114,7 +115,6 @@ If you run into any issues or need help getting started, please do one of the fo
 - Report an Issue: <https://github.com/cssnr/toml-run/issues>
 - Q&A Discussion: <https://github.com/cssnr/toml-run/discussions/categories/q-a>
 - Request a Feature: <https://github.com/cssnr/toml-run/issues/new?template=1-feature.yaml>
-- Request Server Support: <https://github.com/cssnr/toml-run/issues/new?template=2-server.yaml>
 - Chat with us on Discord: <https://discord.gg/wXy6m2X8wY>
 
 [![Features](https://img.shields.io/badge/features-brightgreen?style=for-the-badge&logo=googleanalytics&logoColor=white)](https://github.com/cssnr/toml-run/issues/new?template=1-feature.yaml)

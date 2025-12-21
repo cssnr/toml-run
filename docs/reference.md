@@ -14,9 +14,9 @@ icon: lucide/square-terminal
 The CLI executable is `run` and help is available with `--help`.
 
 ```shell
-usage: run [-l] [-c CONFIG] [-s] [-v] [-V] [-h] [name]  # (1)!
+usage: run [-l] [-c CONFIG] [-s] [-v] [-V] [-D] [-h] [name]
 
-example: run script
+example: run script -- --script-args
 
 positional arguments:
   name                 Name of script to run
@@ -25,8 +25,9 @@ options:
   -l, --list           List available scripts
   -c, --config CONFIG  Config [default: pyproject.toml]
   -s, --silent         Disable script output
-  -v, --verbose        Verbose output [debug: -vv]
+  -v, --verbose        Verbose output [debug: -vvv]
   -V, --version        Show installed version
+  -D, --docs           Launch docs in browser
   -h, --help           Show this help message
 ```
 
@@ -203,10 +204,10 @@ Run without installing using [astral-sh/uv :lucide-arrow-up-right:](https://docs
 uvx toml-run build
 ```
 
-Silent script output with `--silent`.
+Pass additional arguments after `--` terminator.
 
 ```shell
-run build -s
+uv build -- --clean
 ```
 
 Increase output with `--verbose`. Debug with `-vv` or `-vvv`.
@@ -215,15 +216,21 @@ Increase output with `--verbose`. Debug with `-vv` or `-vvv`.
 run build -v
 ```
 
+Silent script output with `--silent`.
+
+```shell
+run build -s
+```
+
 If your scripts are defined in another file use `--config`.
 
 ```shell
 run -c settings.toml build
 ```
 
-Note: this will look for a `settings.toml` in current and parent directories and run the scripts relative to that files directory.
+This will look for a `settings.toml` in current and parent directories and run the scripts relative to that files directory.
 
-In this case if you set the [Environment](#environment) variable you can avoid using the `--config` option every time.
+You acn set the `SCRIPT_CONFIG` [Environment](#environment) variable to avoid using the `--config` option every time.
 
 ## Environment
 
