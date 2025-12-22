@@ -63,20 +63,21 @@ To get started see the [Quick Start](#quick-start) section or check out the [Fea
 
 If you run into any issues or have any questions, [support](support.md) is available.
 
-## Features
+## :lucide-hand-coins: Features
 
 - Define scripts in your `pyproject.toml`
-- Easily run scripts with `run script`
+- Easily run scripts with `run [name]`
 - Cross-platform support using subprocess
 - Supports `pre` and `post` scripts
 - Supports multiple commands per script
+- Pass additional arguments to scripts
 - Automatically finds the `pyproject.toml`
 - Runs scripts relative to the root directory
 - Evaluate python code :lucide-flask-conical:{ title="Experimental Feature!" }
 
 For more details see the [full reference](reference.md).
 
-## Quick Start
+## :lucide-tv-minimal-play: Quick Start
 
 First, [install](reference.md#install) the package from PyPi: <https://pypi.org/p/toml-run>
 
@@ -90,6 +91,18 @@ First, [install](reference.md#install) the package from PyPi: <https://pypi.org/
 
     ```shell
     pip install toml-run
+    ```
+
+=== "uv + dev"
+
+    ```shell
+    uv add --dev toml-run
+    ```
+
+=== "pip + dev"
+
+    ```shell
+    pip install --group dev toml-run
     ```
 
 Then, add some [scripts](reference.md#scripts) to the `pyproject.toml`.
@@ -115,7 +128,8 @@ Or, run without installing using [astral-sh/uv :lucide-arrow-up-right:](https://
 uvx toml-run build
 ```
 
-[:lucide-square-terminal: View Reference](reference.md#scripts){ .md-button .md-button--primary }
+[:simple-toml: Script Reference](reference.md#scripts){ .md-button .md-button--primary }
+[:lucide-square-terminal: Usage Reference](reference.md#usage){ .md-button .md-button--primary }
 
 &nbsp;
 

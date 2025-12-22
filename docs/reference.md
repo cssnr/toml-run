@@ -1,8 +1,8 @@
 ---
-icon: lucide/square-terminal
+icon: lucide/notebook-pen
 ---
 
-# :lucide-square-terminal: Reference
+# :lucide-notebook-pen: Reference
 
 [![TOML Run](assets/images/logo.svg){ align=right width=96 }](https://github.com/cssnr/toml-run?tab=readme-ov-file#readme)
 
@@ -14,9 +14,9 @@ icon: lucide/square-terminal
 The CLI executable is `run` and help is available with `--help`.
 
 ```shell
-usage: run [-l] [-c CONFIG] [-s] [-v] [-V] [-h] [name]  # (1)!
+usage: run [-l] [-c CONFIG] [-s] [-v] [-V] [-D] [-h] [name]  # (1)!
 
-example: run script
+example: run [name] -- --script-args
 
 positional arguments:
   name                 Name of script to run
@@ -25,8 +25,9 @@ options:
   -l, --list           List available scripts
   -c, --config CONFIG  Config [default: pyproject.toml]
   -s, --silent         Disable script output
-  -v, --verbose        Verbose output [debug: -vv]
+  -v, --verbose        Verbose output [debug: -vvv]
   -V, --version        Show installed version
+  -D, --docs           Launch docs in browser
   -h, --help           Show this help message
 ```
 
@@ -34,7 +35,7 @@ options:
 
 To view the source code, see the [cli.py :lucide-arrow-up-right:](https://github.com/cssnr/toml-run/blob/master/src/tomlrun/cli.py) on GitHub.
 
-## Install
+## :simple-pypi: Install
 
 From PyPI: <https://pypi.org/p/toml-run>
 
@@ -110,7 +111,7 @@ Run without installing using [astral-sh/uv :lucide-arrow-up-right:](https://docs
 uvx toml-run
 ```
 
-## Scripts
+## :simple-toml: Scripts
 
 Scripts are defined in the `pyproject.toml` using the `[tool.scripts]` section.
 
@@ -154,7 +155,7 @@ All paths are relative to the config file directory.
 clean = "rm -rf dist"
 ```
 
-Therefore, this will always remove this `dist` folder.
+Therefore, `clean` will always remove this `dist` folder.
 
 ```text
 .
@@ -167,9 +168,13 @@ Run Python code using `eval` easily. :lucide-flask-conical:{ title="Experimental
 ```toml
 unlink = "#py Path('file').unlink(True)"
 rmtree = "#py shutil.rmtree('dir', True)"
-chain = ["echo one", "run unlink", "#py print('two')", "run rmtree"]
-web = "webbrowser.open_new_tab('https://github.com/cssnr/toml-run')"
+web = "#py webbrowser.open_new_tab('https://github.com/cssnr/toml-run')"
+chain = ["run rmtree", "#py print('two')", "echo three", "run web"]
 ```
+
+You can use these in a list and with run just not using `&&`.
+The only parsing done is looking for `#py` at the start of a string and running eval.
+You can view the list of imported modules below.
 
 ??? details "Imported Modules"
 
@@ -183,7 +188,7 @@ web = "webbrowser.open_new_tab('https://github.com/cssnr/toml-run')"
     from pprint import pformat
     ```
 
-## Usage
+## :lucide-square-terminal: Usage
 
 List available scripts with `--list`.
 
@@ -203,10 +208,10 @@ Run without installing using [astral-sh/uv :lucide-arrow-up-right:](https://docs
 uvx toml-run build
 ```
 
-Silent script output with `--silent`.
+Pass additional arguments after `--` terminator.
 
 ```shell
-run build -s
+run build -- --clean
 ```
 
 Increase output with `--verbose`. Debug with `-vv` or `-vvv`.
@@ -215,17 +220,23 @@ Increase output with `--verbose`. Debug with `-vv` or `-vvv`.
 run build -v
 ```
 
+Silent script output with `--silent`.
+
+```shell
+run build -s
+```
+
 If your scripts are defined in another file use `--config`.
 
 ```shell
 run -c settings.toml build
 ```
 
-Note: this will look for a `settings.toml` in current and parent directories and run the scripts relative to that files directory.
+This will look for a `settings.toml` in current and parent directories and run the scripts relative to that files directory.
 
-In this case if you set the [Environment](#environment) variable you can avoid using the `--config` option every time.
+You acn set the `SCRIPT_CONFIG` [Environment](#environment) variable to avoid using the `--config` option every time.
 
-## Environment
+## :lucide-list: Environment
 
 Many options support setting environment variable defaults.
 

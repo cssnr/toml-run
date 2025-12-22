@@ -62,7 +62,7 @@ def get_scripts(document: Dict[str, dict]) -> Optional[Scripts]:
     tool: Dict[str, dict] = document.get("tool", {})
     vprint(f"{tool=}\n", lvl=3)
     scripts = {}
-    for key in ["scripts", "toml-run"]:
+    for key in ["toml-run", "scripts"]:
         if key in tool:
             scripts = tool[key]
             break
@@ -88,16 +88,23 @@ def list_scripts(scripts: Scripts, pyproject: Path):
     print("")
 
 
-def run_script(scripts: Scripts, name: str, path: Path):
+def run_script(scripts: Scripts, name: str, path: Path, args: List[str]):
     vprint(f"Working Directory: {path.absolute()}")
+    vprint(f"{args=}", lvl=2)
+    os.chdir(path)  # for eval so it only happens once
     for prefix in ["pre", "", "post"]:
         script_name = f"{prefix}{name}"
         if commands := scripts.get(script_name):
-            for command in commands:
-                print_rule(f"{script_name} --- {command}", "-")
+            last = len(commands) - 1
+            for i, command in enumerate(commands):
+                # vprint(f"{prefix=}", f"{i=}", f"{last=}", f"{command=}")
                 if command.startswith("#py"):
+                    print_rule(f"{script_name} --- {command}", "-")
                     eval(command[3:])
                     continue
+                if not prefix and args and i == last:
+                    command = command + " " + " ".join(args)
+                print_rule(f"{script_name} --- {command}", "-")
                 subprocess.run(command, capture_output=bool(state["silent"]), check=True, shell=True, cwd=path)
 
 
@@ -112,21 +119,25 @@ def env(name: str) -> Any:
 
 
 def run() -> None:
-    parser = argparse.ArgumentParser(description="example: %(prog)s script", epilog=f"docs: {docs}", add_help=False)
+    parser = argparse.ArgumentParser(
+        description="example: %(prog)s [name] -- --script-args", epilog=f"docs: {docs}", add_help=False
+    )
     parser.add_argument("name", type=str, nargs="?", help="Name of script to run")
     parser.add_argument("-l", "--list", action="store_true", help="List available scripts")
     parser.add_argument("-c", "--config", type=Path, default=env("config"), help="Config [default: pyproject.toml]")
     parser.add_argument("-s", "--silent", action="store_true", default=env("silent"), help="Disable script output")
-    parser.add_argument("-v", "--verbose", action="count", default=env("verbose"), help="Verbose output [debug: -vv]")
+    parser.add_argument("-v", "--verbose", action="count", default=env("verbose"), help="Verbose output [debug: -vvv]")
     parser.add_argument("-V", "--version", action="version", version=__version__, help="Show installed version")
     parser.add_argument("-D", "--docs", action=DocsAction, nargs=0, help="Launch docs in browser")
     parser.add_argument("-h", "--help", action="help", default=argparse.SUPPRESS, help="Show this help message")
-    args = parser.parse_args()
-    vprint(f"{args=}", lvl=2)
-
+    # parser.add_argument("args", nargs=argparse.REMAINDER, default=[])
+    # args = parser.parse_args()
+    args, remaining = parser.parse_known_args()
+    # print(f"{args=}", f"{remaining=}", sep='\n')
     state["silent"] = args.silent
     state["verbose"] = args.verbose
     vprint(f"{state=}")
+    vprint(f"{args=}", f"{remaining=}", lvl=2)
 
     config = get_config(args.config)
     if not config:
@@ -138,7 +149,7 @@ def run() -> None:
     vprint(f"{document=}\n", lvl=3)
 
     scripts: Optional[Scripts] = get_scripts(document)
-    vprint(pformat(scripts), end="\n\n", lvl=2)
+    vprint(pformat(scripts), end="\n\n", lvl=3)
     if not scripts:
         raise ValueError(f"No scripts found in: {config.absolute()}")
 
@@ -146,22 +157,22 @@ def run() -> None:
         list_scripts(scripts, config)
         raise SystemExit
 
-    name = getattr(args, "name", None)
-    vprint(f"{name=}", lvl=2)
-    if not name:
+    # name = getattr(args, "name", None)
+    vprint(f"{args.name=}", lvl=2)
+    if not args.name:
         if scripts:
             list_scripts(scripts, config)
         else:
             parser.print_help(sys.stderr)
         raise ValueError("No script name provided.")
 
-    script: Optional[list] = scripts.get(name)
+    script: Optional[list] = scripts.get(args.name)
     vprint(f"{script=}", lvl=2)
     if not script:
         list_scripts(scripts, config)
-        raise ValueError(f"Script not found: {name}")
+        raise ValueError(f"Script not found: {args.name}")
 
-    run_script(scripts, name, config.parent)
+    run_script(scripts, args.name, config.parent, remaining)
 
 
 def main() -> None:

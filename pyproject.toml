@@ -112,22 +112,29 @@ select = ["E4", "E7", "E9", "F", "B", "Q"]
 # https://github.com/cssnr/toml-run
 [tool.scripts]
 # Project
+test = ["coverage run -m pytest", "coverage report -m"]
 build = "uv run hatch build"
-docs = "run docs-clean && zensical serve --open"
-docs-clean = "rm -rf .cache site"
+predocs = "rm -rf .cache site"
+docs = "zensical serve --open"
+docs-build = "zensical build --clean"
 format = ["black .", "tombi format .", "ruff format ."]
 lint = """
-bandit -c pyproject.toml -r .
 black --check .
-mypy .
-ruff check .
+run bandit
+run mypy
+run ruff
+run validate
+run yamllint
 tombi lint .
 ty check -v .
-validate-pyproject pyproject.toml
-yamllint -c .github/yamllint.yaml .
 """
+bandit = "bandit -c pyproject.toml -r ."
+mypy = "mypy ."
+ruff = "ruff check ."
+validate = "validate-pyproject pyproject.toml"
+yamllint = "yamllint -c .github/yamllint.yaml ."
 # Test
-test = "echo start && run one && run two && echo done"
+test1 = "echo start && run one && run two && echo done"
 one = "echo one"
 two = "echo two && run three"
 three = "echo three"
@@ -135,7 +142,7 @@ preone = "echo pre"
 postone = "echo post"
 print = "#py print('test')"
 # Debugging
-clean = 'python -c "print(\"test\")"'
+list = ["echo one", "echo two", "echo three"]
 listdir = "#py print(os.listdir('.'))"
 remove = "#py os.remove('test.txt')"
 unlink = "#py Path('test.txt').unlink(True)"

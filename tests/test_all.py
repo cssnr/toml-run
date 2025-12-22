@@ -18,7 +18,7 @@ def test_cli(capsys):
     captured = capsys.readouterr()
     assert captured.out.strip() == "0.0.1"
 
-    with patch("sys.argv", ["run", "test"]):
+    with patch("sys.argv", ["run", "test1"]):
         main()
     captured = capsys.readouterr()
     # NOTE: Does not capture subprocess.run output...
@@ -41,7 +41,7 @@ def test_cli(capsys):
     captured = capsys.readouterr()
     assert captured.err == "\nError: Script not found: fake\n"
 
-    with patch("sys.argv", ["run", "one", "-v"]):
+    with patch("sys.argv", ["run", "one", "-v", "extra"]):
         main()
     captured = capsys.readouterr()
     assert captured.out.strip().startswith("--- preone ---")
