@@ -43,14 +43,14 @@ To get started [Install](#install) the cli and view the [Usage](#usage).
 ## Features<a id="features"></a>
 
 - Define scripts in your `pyproject.toml`
-- Easily run scripts with `run script`
+- Easily run scripts with `run [name]`
 - Cross-platform support using subprocess
 - Supports `pre` and `post` scripts
 - Supports multiple commands per script
 - Pass additional arguments to scripts
 - Automatically finds the `pyproject.toml`
 - Runs scripts relative to the root directory
-- Evaluate python code 🧪 (experimental)
+- Evaluate python code 🧪 _(experimental)_
 
 [![View Full Reference](https://img.shields.io/badge/view_full_reference-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://cssnr.github.io/toml-run/reference/)
 

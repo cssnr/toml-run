@@ -120,7 +120,7 @@ def env(name: str) -> Any:
 
 def run() -> None:
     parser = argparse.ArgumentParser(
-        description="example: %(prog)s script -- --script-args", epilog=f"docs: {docs}", add_help=False
+        description="example: %(prog)s [name] -- --script-args", epilog=f"docs: {docs}", add_help=False
     )
     parser.add_argument("name", type=str, nargs="?", help="Name of script to run")
     parser.add_argument("-l", "--list", action="store_true", help="List available scripts")
