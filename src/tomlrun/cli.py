@@ -62,7 +62,7 @@ def get_scripts(document: Dict[str, dict]) -> Optional[Scripts]:
     tool: Dict[str, dict] = document.get("tool", {})
     vprint(f"{tool=}\n", lvl=3)
     scripts = {}
-    for key in ["scripts", "toml-run"]:
+    for key in ["toml-run", "scripts"]:
         if key in tool:
             scripts = tool[key]
             break
