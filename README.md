@@ -64,6 +64,9 @@ pip install --group dev toml-run
 
 uv tool install toml-run
 uv add --dev toml-run
+
+brew tap cssnr/tap
+brew install toml-run
 ```
 
 [![View Install Guide](https://img.shields.io/badge/view_install_guide-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://cssnr.github.io/toml-run/reference/#install)
@@ -74,16 +77,16 @@ First, add some scripts to the `pyproject.toml` using the `[tool.scripts]` secti
 
 ```toml title="pyproject.toml"
 [tool.scripts]
-prepare = "python scripts/prepare.py"
-build = "run prepare && uv run hatch build"
+clean = "rm -rf dist"
+build = "run clean && uv run hatch build"
 prelint = "echo always runs before lint"
-lint = ["black --check .", "ruff check ."]
+lint = ["uv run ruff check .", "uv run ty check ."]
 postlint = "echo always runs after lint"
 format = """
-black .
-ruff format .
+uv run black .
+uv run ruff format .
 """
-clean = "#py shutil.rmtree('.cache', True)"
+rmtree = "#py shutil.rmtree('.cache', True)"
 ```
 
 [![View Scripts Guide](https://img.shields.io/badge/view_scripts_guide-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://cssnr.github.io/toml-run/reference/#scripts)
