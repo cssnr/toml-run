@@ -66,9 +66,9 @@ build = "uv run hatch build"
 run build
 ```
 
-!!! tip "There are detailed [Install](reference.md#install), [Script](reference.md#scripts) and [Usage](reference.md#usage) guides available."
-
 If you run into any issues or have any questions, [support](support.md) is available.
+
+!!! tip "There are detailed [Install](reference.md#install), [Script](reference.md#scripts) and [Usage](reference.md#usage) guides available."
 
 ## :lucide-sparkles: Features
 
