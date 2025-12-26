@@ -8,14 +8,15 @@ env:
   name: "toml-run"
 
 jobs:
-  #pyinstaller:
-  #  name: "PyInstaller"
-  #  uses: ./.github/workflows/pyinstaller.yaml
-  #  secrets: inherit
-  #  with:
-  #    version: ${{ github.ref_name }}
-  #  permissions:
-  #    contents: write
+  snapcraft:
+    name: "Snapcraft"
+    if: ${{ !github.event.release.prerelease }}
+    uses: ./.github/workflows/snapcraft.yaml
+    secrets: inherit
+    with:
+      version: ${{ github.ref_name }}
+    permissions:
+      contents: write
 
   build:
     name: "Build"
@@ -100,37 +101,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: [publish, build]
-
-    env:
-      repo: "cssnr/tap"
-      path: "homebrew"
-      branch: "master"
-      formula: "toml-run.rb"
-
     steps:
-      - name: "Checkout Homebrew"
-        uses: actions/checkout@v6
+      - name: "Homebrew Action"
+        uses: cssnr/homebrew-action@master
         with:
-          repository: ${{ env.repo }}
-          ref: ${{ env.branch }}
-          path: ${{ env.path }}
-          persist-credentials: false
-
-      - name: "Update Formula"
-        shell: bash
-        run: |
-          line=$(grep -n -m1 version "${{ env.path }}/Formula/${{ env.formula }}" | cut -f1 -d:)
-          sed -i "${line}"'s/.*/  version "${{ github.ref_name }}"/' "${{ env.path }}/Formula/${{ env.formula }}"
-          cat "${{ env.path }}/Formula/${{ env.formula }}"
-
-      - name: "Commit and Push"
-        working-directory: ${{ env.path }}
-        run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git commit -a -m "Bump ${{ env.formula }} to ${{ github.ref_name }}"
-          git remote set-url origin "https://${{ secrets.HOMEBREW_PAT }}@github.com/${{ env.repo }}"
-          git push -u origin ${{ env.branch }}
+          version: ${{ github.ref_name }}
+          repo: cssnr/homebrew-tap
+          token: ${{ secrets.HOMEBREW_PAT }}
 
   release:
     name: "Release"
