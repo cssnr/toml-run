@@ -37,18 +37,13 @@ To view the source code, see the [cli.py :lucide-arrow-up-right:](https://github
 
 ## :simple-pypi: Install
 
-From PyPI: <https://pypi.org/p/toml-run>
+From PyPI: <https://pypi.org/p/toml-run>  
+GitHub: [https://github.com/cssnr/toml-run](https://github.com/cssnr/toml-run?tab=readme-ov-file#readme)
 
 === "uv"
 
     ```shell
     uv tool install toml-run
-    ```
-
-=== "pip"
-
-    ```shell
-    pip install toml-run
     ```
 
 === "uv + dev"
@@ -57,24 +52,23 @@ From PyPI: <https://pypi.org/p/toml-run>
     uv add --dev toml-run
     ```
 
+=== "pip"
+
+    ```shell
+    pip install toml-run
+    ```
+
 === "pip + dev"
 
     ```shell
     pip install --group dev toml-run
     ```
 
-From GitHub: [https://github.com/cssnr/toml-run](https://github.com/cssnr/toml-run?tab=readme-ov-file#readme)
-
-=== "uv"
+=== "brew"
 
     ```shell
-    uv tool install git+https://github.com/cssnr/toml-run.git
-    ```
-
-=== "pip"
-
-    ```shell
-    pip install git+https://github.com/cssnr/toml-run.git
+    brew tap cssnr/tap
+    brew install toml-run
     ```
 
 Upgrade.
@@ -85,10 +79,29 @@ Upgrade.
     uv tool upgrade toml-run
     ```
 
+=== "uv + dev"
+
+    ```shell
+    uv sync --upgrade-package toml-run
+    ```
+
 === "pip"
 
     ```shell
     pip install -U toml-run
+    ```
+
+=== "pip + dev"
+
+    ```shell
+    pip install -U toml-run
+    ```
+
+=== "brew"
+
+    ```shell
+    brew update
+    brew install toml-run
     ```
 
 Uninstall.
@@ -99,16 +112,40 @@ Uninstall.
     uv tool uninstall toml-run
     ```
 
+=== "uv + dev"
+
+    ```shell
+    uv remove --group dev toml-run
+    ```
+
 === "pip"
 
     ```shell
     pip uninstall toml-run
     ```
 
+=== "pip + dev"
+
+    ```shell
+    pip uninstall toml-run
+    ```
+
+=== "brew"
+
+    ```shell
+    brew uninstall toml-run
+    ```
+
 Run without installing using [astral-sh/uv :lucide-arrow-up-right:](https://docs.astral.sh/uv/).
 
 ```shell
 uvx toml-run
+```
+
+Check the installed `--version`.
+
+```shell
+run -V
 ```
 
 ## :simple-toml: Scripts
@@ -151,7 +188,7 @@ failure = "run abc && echo success || echo failed"
 
 All paths are relative to the config file directory.
 
-```toml
+```toml title="pyproject.toml"
 clean = "rm -rf dist"
 ```
 
@@ -234,7 +271,7 @@ run -c settings.toml build
 
 This will look for a `settings.toml` in current and parent directories and run the scripts relative to that files directory.
 
-You acn set the `SCRIPT_CONFIG` [Environment](#environment) variable to avoid using the `--config` option every time.
+You can set the `SCRIPT_CONFIG` [Environment](#environment) variable to avoid using the `--config` option every time.
 
 ## :lucide-list: Environment
 

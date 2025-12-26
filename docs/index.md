@@ -24,16 +24,12 @@ icon: lucide/rocket
 Define custom scripts in your pyproject.toml and easily run them with this dependency free tool.
 This tool is both inspired by and similar to [NPM Scripts :lucide-arrow-up-right:](https://docs.npmjs.com/cli/v8/using-npm/scripts).
 
+To get started see the [Quick Start](#quick-start) section or check out the [Features](#features).
+
 === "uv"
 
     ```shell
     uv tool install toml-run
-    ```
-
-=== "pip"
-
-    ```shell
-    pip install toml-run
     ```
 
 === "uv + dev"
@@ -42,10 +38,23 @@ This tool is both inspired by and similar to [NPM Scripts :lucide-arrow-up-right
     uv add --dev toml-run
     ```
 
+=== "pip"
+
+    ```shell
+    pip install toml-run
+    ```
+
 === "pip + dev"
 
     ```shell
     pip install --group dev toml-run
+    ```
+
+=== "brew"
+
+    ```shell
+    brew tap cssnr/tap
+    brew install toml-run
     ```
 
 ```toml title="pyproject.toml"
@@ -57,13 +66,11 @@ build = "uv run hatch build"
 run build
 ```
 
-To get started see the [Quick Start](#quick-start) section or check out the [Features](#features).
-
-!!! tip "There are detailed [Install](reference.md#install), [Script](reference.md#scripts) and [Usage](reference.md#usage) guide available."
-
 If you run into any issues or have any questions, [support](support.md) is available.
 
-## :lucide-hand-coins: Features
+!!! tip "There are detailed [Install](reference.md#install), [Script](reference.md#scripts) and [Usage](reference.md#usage) guides available."
+
+## :lucide-sparkles: Features
 
 - Define scripts in your `pyproject.toml`
 - Easily run scripts with `run [name]`
@@ -77,20 +84,15 @@ If you run into any issues or have any questions, [support](support.md) is avail
 
 For more details see the [full reference](reference.md).
 
-## :lucide-tv-minimal-play: Quick Start
+## :lucide-plane-takeoff: Quick Start
 
-First, [install](reference.md#install) the package from PyPi: <https://pypi.org/p/toml-run>
+First, [install](reference.md#install) the package from [PyPi :lucide-arrow-up-right:](https://pypi.org/p/toml-run)
+or [GitHub :lucide-arrow-up-right:](https://github.com/cssnr/toml-run?tab=readme-ov-file#readme).
 
 === "uv"
 
     ```shell
     uv tool install toml-run
-    ```
-
-=== "pip"
-
-    ```shell
-    pip install toml-run
     ```
 
 === "uv + dev"
@@ -99,10 +101,23 @@ First, [install](reference.md#install) the package from PyPi: <https://pypi.org/
     uv add --dev toml-run
     ```
 
+=== "pip"
+
+    ```shell
+    pip install toml-run
+    ```
+
 === "pip + dev"
 
     ```shell
     pip install --group dev toml-run
+    ```
+
+=== "brew"
+
+    ```shell
+    brew tap cssnr/tap
+    brew install toml-run
     ```
 
 Then, add some [scripts](reference.md#scripts) to the `pyproject.toml`.
@@ -112,7 +127,7 @@ Then, add some [scripts](reference.md#scripts) to the `pyproject.toml`.
 clean = "rm -rf dist"
 build = "run clean && uv run hatch build"
 prelint = "echo always runs before lint"
-lint = ["ruff check .", "ty check -v ."]
+lint = ["uv run ruff check .", "uv run ty check ."]
 postlint = "echo always runs after lint"
 ```
 
@@ -129,6 +144,7 @@ uvx toml-run build
 ```
 
 [:simple-toml: Script Reference](reference.md#scripts){ .md-button .md-button--primary }
+
 [:lucide-square-terminal: Usage Reference](reference.md#usage){ .md-button .md-button--primary }
 
 &nbsp;
