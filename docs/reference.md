@@ -11,7 +11,7 @@ icon: lucide/notebook-pen
 - [Usage](#usage)
 - [Environment](#environment)
 
-The CLI executable is `run` and help is available with `--help`.
+The CLI executable is `run` or `toml-run` and help is available with `--help`.
 
 ```shell
 usage: run [-l] [-c CONFIG] [-s] [-v] [-V] [-D] [-h] [name]  # (1)!
@@ -46,7 +46,7 @@ GitHub: [https://github.com/cssnr/toml-run](https://github.com/cssnr/toml-run?ta
     uv tool install toml-run
     ```
 
-=== "uv + dev"
+=== "uv-dev"
 
     ```shell
     uv add --dev toml-run
@@ -58,7 +58,7 @@ GitHub: [https://github.com/cssnr/toml-run](https://github.com/cssnr/toml-run?ta
     pip install toml-run
     ```
 
-=== "pip + dev"
+=== "pip-dev"
 
     ```shell
     pip install --group dev toml-run
@@ -67,8 +67,7 @@ GitHub: [https://github.com/cssnr/toml-run](https://github.com/cssnr/toml-run?ta
 === "brew"
 
     ```shell
-    brew tap cssnr/tap
-    brew install toml-run
+    brew install cssnr/tap/toml-run
     ```
 
 Upgrade.
@@ -79,7 +78,7 @@ Upgrade.
     uv tool upgrade toml-run
     ```
 
-=== "uv + dev"
+=== "uv-dev"
 
     ```shell
     uv sync --upgrade-package toml-run
@@ -91,7 +90,7 @@ Upgrade.
     pip install -U toml-run
     ```
 
-=== "pip + dev"
+=== "pip-dev"
 
     ```shell
     pip install -U toml-run
@@ -100,8 +99,7 @@ Upgrade.
 === "brew"
 
     ```shell
-    brew update
-    brew install toml-run
+    brew update && brew install toml-run
     ```
 
 Uninstall.
@@ -112,7 +110,7 @@ Uninstall.
     uv tool uninstall toml-run
     ```
 
-=== "uv + dev"
+=== "uv-dev"
 
     ```shell
     uv remove --group dev toml-run
@@ -124,7 +122,7 @@ Uninstall.
     pip uninstall toml-run
     ```
 
-=== "pip + dev"
+=== "pip-dev"
 
     ```shell
     pip uninstall toml-run
@@ -226,6 +224,8 @@ You can view the list of imported modules below.
     ```
 
 ## :lucide-square-terminal: Usage
+
+The CLI executable is `run` or `toml-run`.
 
 List available scripts with `--list`.
 

@@ -32,7 +32,7 @@ To get started see the [Quick Start](#quick-start) section or check out the [Fea
     uv tool install toml-run
     ```
 
-=== "uv + dev"
+=== "uv-dev"
 
     ```shell
     uv add --dev toml-run
@@ -44,7 +44,7 @@ To get started see the [Quick Start](#quick-start) section or check out the [Fea
     pip install toml-run
     ```
 
-=== "pip + dev"
+=== "pip-dev"
 
     ```shell
     pip install --group dev toml-run
@@ -53,8 +53,7 @@ To get started see the [Quick Start](#quick-start) section or check out the [Fea
 === "brew"
 
     ```shell
-    brew tap cssnr/tap
-    brew install toml-run
+    brew install cssnr/tap/toml-run
     ```
 
 ```toml title="pyproject.toml"
@@ -95,7 +94,7 @@ or [GitHub :lucide-arrow-up-right:](https://github.com/cssnr/toml-run?tab=readme
     uv tool install toml-run
     ```
 
-=== "uv + dev"
+=== "uv-dev"
 
     ```shell
     uv add --dev toml-run
@@ -107,7 +106,7 @@ or [GitHub :lucide-arrow-up-right:](https://github.com/cssnr/toml-run?tab=readme
     pip install toml-run
     ```
 
-=== "pip + dev"
+=== "pip-dev"
 
     ```shell
     pip install --group dev toml-run
@@ -116,8 +115,7 @@ or [GitHub :lucide-arrow-up-right:](https://github.com/cssnr/toml-run?tab=readme
 === "brew"
 
     ```shell
-    brew tap cssnr/tap
-    brew install toml-run
+    brew install cssnr/tap/toml-run
     ```
 
 Then, add some [scripts](reference.md#scripts) to the `pyproject.toml`.

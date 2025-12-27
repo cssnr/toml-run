@@ -65,8 +65,7 @@ pip install --group dev toml-run
 uv tool install toml-run
 uv add --dev toml-run
 
-brew tap cssnr/tap
-brew install toml-run
+brew install cssnr/tap/toml-run
 ```
 
 [![View Install Guide](https://img.shields.io/badge/view_install_guide-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://cssnr.github.io/toml-run/reference/#install)
