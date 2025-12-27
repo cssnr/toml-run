@@ -1,0 +1,14 @@
+# IDE
+.idea/
+.vscode/
+
+# Build
+dist/
+node_modules/
+
+# Tools
+.*cache*/
+package-lock.json
+
+# Files
+*.html

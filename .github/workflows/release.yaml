@@ -6,16 +6,18 @@ on:
 
 env:
   name: "toml-run"
+  download-url: "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/toml_run-${{ github.ref_name }}.tar.gz"
 
 jobs:
-  #pyinstaller:
-  #  name: "PyInstaller"
-  #  uses: ./.github/workflows/pyinstaller.yaml
-  #  secrets: inherit
-  #  with:
-  #    version: ${{ github.ref_name }}
-  #  permissions:
-  #    contents: write
+  snapcraft:
+    name: "Snapcraft"
+    if: ${{ !github.event.release.prerelease }}
+    uses: ./.github/workflows/snapcraft.yaml
+    secrets: inherit
+    with:
+      version: ${{ github.ref_name }}
+    permissions:
+      contents: write
 
   build:
     name: "Build"
@@ -100,37 +102,27 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: [publish, build]
-
-    env:
-      repo: "cssnr/tap"
-      path: "homebrew"
-      branch: "master"
-      formula: "toml-run.rb"
-
     steps:
-      - name: "Checkout Homebrew"
-        uses: actions/checkout@v6
+      #- name: "Homebrew Action"
+      #  uses: cssnr/homebrew-action@master
+      #  with:
+      #    version: ${{ github.ref_name }}
+      #    repo: cssnr/homebrew-tap
+      #    token: ${{ secrets.HOMEBREW_PAT }}
+
+      - name: "Homebrew Formula Action"
+        uses: mislav/bump-homebrew-formula-action@v3
+        env:
+          COMMITTER_TOKEN: ${{ secrets.HOMEBREW_PAT }}
         with:
-          repository: ${{ env.repo }}
-          ref: ${{ env.branch }}
-          path: ${{ env.path }}
-          persist-credentials: false
-
-      - name: "Update Formula"
-        shell: bash
-        run: |
-          line=$(grep -n -m1 version "${{ env.path }}/Formula/${{ env.formula }}" | cut -f1 -d:)
-          sed -i "${line}"'s/.*/  version "${{ github.ref_name }}"/' "${{ env.path }}/Formula/${{ env.formula }}"
-          cat "${{ env.path }}/Formula/${{ env.formula }}"
-
-      - name: "Commit and Push"
-        working-directory: ${{ env.path }}
-        run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git commit -a -m "Bump ${{ env.formula }} to ${{ github.ref_name }}"
-          git remote set-url origin "https://${{ secrets.HOMEBREW_PAT }}@github.com/${{ env.repo }}"
-          git push -u origin ${{ env.branch }}
+          formula-name: toml-run.rb
+          tag-name: ${{ github.ref_name }}
+          download-url: ${{ env.download-url }}
+          #download-sha256: 64be704a875d2a59753d80ee8a533c3fe183e3f06807ff7dc2232938ccb01549
+          homebrew-tap: "smashedr/homebrew-test"
+          create-pullrequest: false
+          create-branch: false
+          commit-message: "Bump {{formulaName}} to {{version}}"
 
   release:
     name: "Release"

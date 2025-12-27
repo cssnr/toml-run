@@ -1,0 +1,47 @@
+# https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/snapcraft-yaml/#reference-snapcraft-yaml
+name: toml-run
+title: Run Custom pyproject.toml Scripts
+version: "0.0.1"
+license: MIT
+summary: Define custom scripts in your pyproject.toml and easily run them.
+description: |
+  Define custom scripts in your pyproject.toml and easily run them with this dependency free tool.
+  This tool is both inspired by and similar to NPM Scripts.
+
+  To use `run` add the alias: sudo snap alias toml-run run
+
+  Snap's are unable to read files outside of your home directory.
+  To use this outside of your home directory, install using pip or brew instead.
+
+  If you run into any issues or have any questions, support is available.
+
+base: core24
+grade: stable
+confinement: strict
+
+source-code: [https://github.com/cssnr/toml-run]
+contact: [https://cssnr.github.io/toml-run/support]
+website: [https://cssnr.github.io/toml-run]
+issues: [https://github.com/cssnr/toml-run/issues]
+donation: [https://ko-fi.com/cssnr]
+
+icon: docs/assets/images/logo.svg
+
+platforms:
+  amd64:
+    build-on: [amd64]
+    build-for: [amd64]
+  arm64:
+    build-on: [arm64]
+    build-for: [arm64]
+
+parts:
+  toml-run:
+    plugin: python
+    source: .
+
+apps:
+  toml-run:
+    command: bin/toml-run
+    plugs:
+      - home
