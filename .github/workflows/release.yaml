@@ -110,6 +110,14 @@ jobs:
       #    repo: cssnr/homebrew-tap
       #    token: ${{ secrets.HOMEBREW_PAT }}
 
+      - name: "Download URL"
+        id: url
+        uses: cssnr/web-request-action@path # TODO: Update to @master or @latest
+        with:
+          method: "GET"
+          url: "https://pypi.org/pypi/${{ env.name }}/${{ github.ref_name }}/json"
+          path: '$.urls[?(@.packagetype=="sdist")]'
+
       - name: "Homebrew Formula Action"
         uses: mislav/bump-homebrew-formula-action@v3
         env:
@@ -117,9 +125,9 @@ jobs:
         with:
           formula-name: toml-run.rb
           tag-name: ${{ github.ref_name }}
-          download-url: ${{ env.download-url }}
-          #download-sha256: 64be704a875d2a59753d80ee8a533c3fe183e3f06807ff7dc2232938ccb01549
-          homebrew-tap: "smashedr/homebrew-test"
+          download-url: ${{ fromJSON(steps.url.outputs.result).url }}
+          download-sha256: ${{ fromJSON(steps.url.outputs.result).digests.sha256 }}
+          homebrew-tap: "cssnr/homebrew-tap"
           create-pullrequest: false
           create-branch: false
           commit-message: "Bump {{formulaName}} to {{version}}"

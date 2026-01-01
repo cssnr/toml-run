@@ -1,5 +1,6 @@
 [project]
 name = "toml-run"
+version = "0.0.1"
 description = "Define custom scripts in your pyproject.toml and easily run them with this dependency free tool."
 readme = "README.md"
 requires-python = ">=3.8"
@@ -14,7 +15,6 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = ["tomli>=1.1.0; python_version<'3.11'"]
-dynamic = ["version"]
 
 [project.urls]
 Changelog = "https://github.com/cssnr/toml-run/releases"
@@ -28,6 +28,9 @@ Issues = "https://github.com/cssnr/toml-run/issues"
 [project.scripts]
 run = "tomlrun.cli:main"
 toml-run = "tomlrun.cli:main"
+
+# [project.optional-dependencies]
+# all = ["tomlkit"]
 
 [dependency-groups]
 dev = [
@@ -45,14 +48,10 @@ dev = [
   "yamllint>=1.35.1",
 ]
 
-# [build-system]
-# requires = ["uv_build>=0.9.9,<0.10.0"]
-# build-backend = "uv_build"
-
-# https://hatch.pypa.io/latest/config/build/#build-system
+# https://docs.astral.sh/uv/reference/settings/#build-backend
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.9.9,<0.10.0"]
+build-backend = "uv_build"
 
 # Bandit
 # https://bandit.readthedocs.io/en/latest/config.html
@@ -72,17 +71,6 @@ extend-exclude = '(\.github)'
 [tool.coverage.run]
 omit = ["_version.py"]
 source = ["src"]
-
-# Hatchling
-# https://hatch.pypa.io/latest/config/build/#build-system
-[tool.hatch.version]
-path = "src/tomlrun/_version.py"
-
-[tool.hatch.build.targets.sdist]
-include = ["src", "CONTRIBUTING.md"]
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/tomlrun"]
 
 # Isort
 # https://pycqa.github.io/isort/docs/configuration/options.html
@@ -117,14 +105,20 @@ build = "uv run hatch build"
 predocs = "rm -rf .cache site"
 docs = "zensical serve --open"
 docs-build = "zensical build --clean"
-format = ["uv run black .", "uv run tombi format .", "uv run ruff format ."]
+format = """
+uv run black .
+uv run isort -c .
+uv run ruff format
+uv run tombi format .
+"""
 lint = """
-uv run black --check .
 run bandit
 run mypy
 run ruff
 run validate
 run yamllint
+uv run black --check .
+uv run isort -c .
 uv run tombi lint .
 uv run ty check -v .
 uv lock --check
@@ -149,3 +143,7 @@ remove = "#py os.remove('test.txt')"
 unlink = "#py Path('test.txt').unlink(True)"
 rmtree = "#py shutil.rmtree('temp', True)"
 pyprint = ["#py  print('one')", "#pyprint('two')", " run three"]
+
+[tool.uv.build-backend]
+module-name = "tomlrun"
+source-include = ["LICENSE"]

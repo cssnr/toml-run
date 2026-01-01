@@ -64,14 +64,16 @@ jobs:
           version: ${{ inputs.version }}
           initpy-files: ${{ inputs.version-file }}
 
-      - name: "Debug Version"
-        continue-on-error: true
+      - name: "Update UV Version"
         run: |
+          uv version ${{ inputs.version }}
+          echo "::group::${{ inputs.version-file }}"
           cat ${{ inputs.version-file }}
+          echo "::endgroup::"
 
       - name: "Build"
         run: |
-          uv run hatch build
+          uv build
 
       - name: "List Artifacts"
         continue-on-error: true
