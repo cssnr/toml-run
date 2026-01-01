@@ -59,12 +59,14 @@ jobs:
           uv sync --locked --all-extras --dev
 
       - name: "Update Version"
+        if: ${{ inputs.version }}
         uses: justalemon/VersionPatcher@master
         with:
           version: ${{ inputs.version }}
           initpy-files: ${{ inputs.version-file }}
 
       - name: "Update UV Version"
+        if: ${{ inputs.version }}
         run: |
           uv version ${{ inputs.version }}
           echo "::group::${{ inputs.version-file }}"
