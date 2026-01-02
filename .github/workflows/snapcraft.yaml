@@ -74,7 +74,7 @@ jobs:
 
       - name: "Snap Build"
         id: build
-        uses: snapcore/action-build@v1
+        uses: snapcore/action-build@3bdaa03e1ba6bf59a65f84a751d943d549a54e79 # v1.3.0
         with:
           snapcraft-args: "--verbosity verbose"
 
@@ -102,7 +102,7 @@ jobs:
           files: ${{ steps.build.outputs.snap }}
 
       - name: "Snap Publish"
-        uses: snapcore/action-publish@v1
+        uses: snapcore/action-publish@214b86e5ca036ead1668c79afb81e550e6c54d40 # v1.2.0
         with:
           snap: ${{ steps.build.outputs.snap }}
           release: stable

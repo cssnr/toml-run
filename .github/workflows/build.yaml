@@ -29,7 +29,7 @@ jobs:
     timeout-minutes: 5
 
     permissions:
-      contents: read
+      contents: write
 
     steps:
       - name: "Checkout"
@@ -59,6 +59,7 @@ jobs:
           uv sync --locked --all-extras --dev
 
       - name: "Update Version"
+        if: ${{ inputs.version }}
         uses: justalemon/VersionPatcher@master
         with:
           version: ${{ inputs.version }}
@@ -71,7 +72,7 @@ jobs:
 
       - name: "Build"
         run: |
-          uv run hatch build
+          uvx toml-run build
 
       - name: "List Artifacts"
         continue-on-error: true
@@ -94,7 +95,9 @@ jobs:
         if: ${{ github.event_name == 'release' }}
         uses: cssnr/upload-release-action@latest
         with:
-          globs: dist/*
+          globs: |
+            dist/*.whl
+            dist/*.tar.gz
 
       - name: "Send Failure Notification"
         if: ${{ failure() }}

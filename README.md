@@ -110,6 +110,10 @@ uvx toml-run build
 
 [![View Usage Guide](https://img.shields.io/badge/view_usage_guide-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://cssnr.github.io/toml-run/reference/#usage)
 
+> [!TIP]  
+> Automatically Format TOML with [tombi](https://github.com/tombi-toml/tombi)
+> Try it out with: `uvx tombi format`
+
 ## Support<a id="support"></a>
 
 If you run into any issues or need help getting started, please do one of the following:
