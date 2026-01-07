@@ -48,7 +48,7 @@ jobs:
         run: env
 
       - name: "Install UV"
-        uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
+        uses: astral-sh/setup-uv@61cb8a9741eeb8a550a1b8544337180c0fc8476b # v7.2.0
 
       - name: "Install Python 3.13"
         run: |
@@ -59,20 +59,21 @@ jobs:
           uv sync --locked --all-extras --dev
 
       - name: "Update Version"
-        if: ${{ inputs.version }}
+        if: ${{ inputs.version-file }}
         uses: justalemon/VersionPatcher@master
         with:
           version: ${{ inputs.version }}
           initpy-files: ${{ inputs.version-file }}
 
       - name: "Debug Version"
+        if: ${{ inputs.version-file }}
         continue-on-error: true
         run: |
           cat ${{ inputs.version-file }}
 
       - name: "Build"
         run: |
-          uvx toml-run build
+          uv run hatch build
 
       - name: "List Artifacts"
         continue-on-error: true
@@ -104,4 +105,4 @@ jobs:
         uses: sarisia/actions-status-discord@b8381b25576cb341b2af39926ab42c5056cc44ed # v1.15.5
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          description: ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}
+          description: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

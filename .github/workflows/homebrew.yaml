@@ -37,25 +37,40 @@ jobs:
           url: ${{ fromJSON(steps.url.outputs.result).url }}
           sha256: ${{ fromJSON(steps.url.outputs.result).digests.sha256 }}
         run: |
-          echo "download-url: ${url}"
-          echo "download-sha256: ${sha256}"
+          echo "url: ${url}"
+          echo "sha256: ${sha256}"
           if [ -z "${url}" ];then
-            echo "Missing URL" && exit 1
+            echo "Missing URL"
+            exit 1
           fi
           if [ -z "${sha256}" ];then
-            echo "Missing SHA256" && exit 1
+            echo "Missing SHA256"
+            exit 1
           fi
 
-      - name: "Homebrew Formula Action"
-        uses: mislav/bump-homebrew-formula-action@56a283fa15557e9abaa4bdb63b8212abc68e655c # v3.6
-        env:
-          COMMITTER_TOKEN: ${{ secrets.HOMEBREW_PAT }}
+      - name: "Homebrew Action"
+        id: homebrew
+        uses: cssnr/homebrew-action@master
         with:
-          formula-name: "${{ inputs.name }}"
-          tag-name: ${{ github.ref_name }}
-          download-url: ${{ fromJSON(steps.url.outputs.result).url }}
-          download-sha256: ${{ fromJSON(steps.url.outputs.result).digests.sha256 }}
-          homebrew-tap: "cssnr/homebrew-tap"
-          create-pullrequest: false
-          create-branch: false
-          commit-message: "Bump {{formulaName}} to {{version}}"
+          url: ${{ fromJSON(steps.url.outputs.result).url }}
+          sha256: ${{ fromJSON(steps.url.outputs.result).digests.sha256 }}
+          repo: cssnr/homebrew-tap
+          formula: ${{ inputs.name }}
+          message: Bump ${{ inputs.name }} to ${{ inputs.version }}
+          branch: master
+          app_id: 146360
+          app_private_key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      #- name: "Homebrew Formula Action"
+      #  uses: mislav/bump-homebrew-formula-action@56a283fa15557e9abaa4bdb63b8212abc68e655c # v3.6
+      #  env:
+      #    COMMITTER_TOKEN: ${{ secrets.HOMEBREW_PAT }}
+      #  with:
+      #    formula-name: "${{ inputs.name }}"
+      #    tag-name: ${{ inputs.version }}
+      #    download-url: ${{ fromJSON(steps.url.outputs.result).url }}
+      #    download-sha256: ${{ fromJSON(steps.url.outputs.result).digests.sha256 }}
+      #    homebrew-tap: "cssnr/homebrew-tap"
+      #    create-pullrequest: false
+      #    create-branch: false
+      #    commit-message: "Bump {{formulaName}} to {{version}}"
