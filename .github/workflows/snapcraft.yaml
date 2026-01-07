@@ -31,9 +31,6 @@ jobs:
     permissions:
       contents: read
 
-    env:
-      SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
-
     steps:
       - name: "Checkout"
         uses: actions/checkout@v6
@@ -92,7 +89,7 @@ jobs:
         if: ${{ github.event_name != 'release' }}
         uses: actions/upload-artifact@v5
         with:
-          name: snap
+          name: ${{ matrix.os }}
           path: ${{ steps.build.outputs.snap }}
 
       - name: "Upload Release"
@@ -103,6 +100,8 @@ jobs:
 
       - name: "Snap Publish"
         uses: snapcore/action-publish@214b86e5ca036ead1668c79afb81e550e6c54d40 # v1.2.0
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
         with:
           snap: ${{ steps.build.outputs.snap }}
           release: stable
@@ -112,4 +111,4 @@ jobs:
         uses: sarisia/actions-status-discord@b8381b25576cb341b2af39926ab42c5056cc44ed # v1.15.5
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          description: ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}
+          description: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

@@ -110,7 +110,6 @@ select = ["E4", "E7", "E9", "F", "B", "Q"]
 # Scripts
 # https://github.com/cssnr/toml-run
 [tool.scripts]
-# Project
 test = ["uv run coverage run -m pytest", "uv run coverage report -m"]
 clean = "rm -rf dist"
 build = "uv run hatch build"
